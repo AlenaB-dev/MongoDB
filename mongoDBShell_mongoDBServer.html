@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MongoDB Shell and MongoDB Server</title>
+    <style>
+      :root {
+        --bg-color-light: #f9f9f9;
+        --text-color-light: #333;
+        --bg-color-dark: #1e1e1e;
+        --text-color-dark: #e0e0e0;
+        --code-bg-light: #eee;
+        --code-bg-dark: #2a2a2a;
+        --accent-color: #007acc;
+      }
+
+      html[data-theme="light"] {
+        --bg-color: var(--bg-color-light);
+        --text-color: var(--text-color-light);
+        --code-bg: var(--code-bg-light);
+      }
+
+      html[data-theme="dark"] {
+        --bg-color: var(--bg-color-dark);
+        --text-color: var(--text-color-dark);
+        --code-bg: var(--code-bg-dark);
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: Arial, sans-serif;
+        margin: 2rem;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .theme-toggle {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: var(--code-bg);
+        color: var(--text-color);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      h1 {
+        padding-top: 50px;
+        padding-bottom: 50px;
+      }
+
+      pre {
+        background-color: var(--code-bg);
+        padding: 1rem;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+      code {
+        background-color: var(--code-bg);
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+      }
+
+      ul {
+        margin-left: 1.5rem;
+      }
+
+      li {
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+      🌙 Toggle Theme
+    </button>
+    <h1>MongoDB Shell and MongoDB Server</h1>
+    <h4>🖥️ 1. MongoDB Server (mongod)</h4>
+    <p>
+      This is the actual database engine. It runs in the background and manages:
+      <br />
+      - Storing data; <br />
+      - Handling client requests; <br />
+      - Reading/writing documents; <br />
+      - Managing collections and databases.
+    </p>
+    <ul>
+      ✅ It needed it to:
+      <li>Start and run the database system.</li>
+      <li>Serve connections from clients (apps, shell, drivers).</li>
+    </ul>
+    <p>📌 Command to start it (in terminal):</p>
+    <pre><code>mongod
+</code></pre>
+    <h4>💬 2. MongoDB Shell (mongosh)</h4>
+    <p>
+      An interactive command-line tool to communicate with the MongoDB server.
+      Use it to: <br />
+      - Run queries (e.g., <code>db.users.find())</code>. <br />
+      - Create or modify collections. <br />
+      - Test and explore data manually.
+    </p>
+    <ul>
+      ✅ It needed it to:
+      <li>Interact with MongoDB in real time.</li>
+      <li>Write and test MongoDB commands.</li>
+    </ul>
+    <p>📌 Command to start it (in terminal):</p>
+    <pre><code>mongosh
+</code></pre>
+    <p>🖼️ Visual Analogy:</p>
+    <pre><code>[Your Terminal] ----> [mongosh] ----> [mongod] ----> [Data on Disk]
+         ^               ^                ^
+    You write         You query      MongoDB Server
+     commands         the DB         handles everything
+</code></pre>
+
+    <!--script for toggle theme-->
+    <script>
+      const themeToggleButton = document.getElementById("themeToggle");
+
+      // Устанавливаем тему при загрузке
+      const savedTheme = localStorage.getItem("theme");
+      const initialTheme = savedTheme || "light";
+      document.documentElement.setAttribute("data-theme", initialTheme);
+      updateToggleButton(initialTheme);
+
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute("data-theme");
+        const newTheme = current === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateToggleButton(newTheme);
+      }
+
+      function updateToggleButton(theme) {
+        if (theme === "dark") {
+          themeToggleButton.textContent = "🌙  Toggle Theme";
+        } else {
+          themeToggleButton.textContent = "☀️ Toggle Theme";
+        }
+      }
+    </script>
+  </body>
+</html>
