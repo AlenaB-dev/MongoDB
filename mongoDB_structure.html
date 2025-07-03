@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MongoDB structure</title>
+    <style>
+      :root {
+        --bg-color-light: #f9f9f9;
+        --text-color-light: #333;
+        --bg-color-dark: #1e1e1e;
+        --text-color-dark: #e0e0e0;
+        --code-bg-light: #eee;
+        --code-bg-dark: #2a2a2a;
+        --accent-color: #007acc;
+      }
+
+      html[data-theme="light"] {
+        --bg-color: var(--bg-color-light);
+        --text-color: var(--text-color-light);
+        --code-bg: var(--code-bg-light);
+      }
+
+      html[data-theme="dark"] {
+        --bg-color: var(--bg-color-dark);
+        --text-color: var(--text-color-dark);
+        --code-bg: var(--code-bg-dark);
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: Arial, sans-serif;
+        margin: 2rem;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .theme-toggle {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: var(--code-bg);
+        color: var(--text-color);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      h1 {
+        padding-top: 50px;
+        padding-bottom: 50px;
+      }
+
+      pre {
+        background-color: var(--code-bg);
+        padding: 1rem;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+      code {
+        background-color: var(--code-bg);
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+      }
+
+      ul {
+        margin-left: 1.5rem;
+      }
+
+      li {
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+      🌙 Toggle Theme
+    </button>
+    <h1>MongoDB structure</h1>
+    <h4>🗂️ MongoDB Structure Overview</h4>
+    <ul>
+      🔸 1. Database
+      <li>Top-level container.</li>
+      <li>Each MongoDB server can have multiple databases.</li>
+      <li>Example: <code>library, shopDB, blogApp.</code></li>
+    </ul>
+
+    <ul>
+      🔸 2. Collection
+      <li>A collection is like a table in SQL.</li>
+      <li>It holds a group of documents.</li>
+      <li>Collections do not require a predefined schema.</li>
+      <li>Example: <code>users, orders, posts.</code></li>
+    </ul>
+
+    <ul>
+      🔸 3. Document
+      <li>The basic unit of data.</li>
+      <li>Stored in BSON (Binary JSON) format, but looks like JSON.</li>
+      <li>
+        Each document is like a row in SQL, but can contain nested structures
+        (arrays, objects).
+      </li>
+      <li>Each document has a unique <code>_id</code> field.</li>
+    </ul>
+    <p>✅ Example <br />Let’s say you're building an app for a book store:</p>
+    <ul>
+      <li>🗃️ Database: <code>bookStore</code></li>
+      <li>📚 Collection: <code>books</code></li>
+      <li>📄 Document:</li>
+    </ul>
+    <pre><code>{
+  "_id": "b1a2c3d4",
+  "title": "The Hobbit",
+  "author": {
+    "firstName": "J.R.R.",
+    "lastName": "Tolkien"
+  },
+  "genres": ["Fantasy", "Adventure"],
+  "publishedYear": 1937,
+  "available": true,
+  "ratings": [5, 4, 5, 3.5]
+}
+</code></pre>
+
+    <ul>
+      🧩 Key Characteristics
+      <li><code>_id</code> - Unique identifier (auto-generated if not set)</li>
+      <li>Embedded Data - Can nest documents (e.g., <code>author</code>)</li>
+      <li>Arrays - Can store lists (e.g., <code>genres, ratings</code>)</li>
+      <li>Flexible - Each document can have different fields</li>
+    </ul>
+
+    <h4>🔄 Relations in MongoDB</h4>
+    <p>
+      🔸 Embedded documents: Good for data that belongs together and is queried
+      together (e.g., <code>author</code> inside <code>book</code>).
+    </p>
+    <p>
+      🔸 References: Use <code>_id</code> fields to connect documents across
+      collections, similar to foreign keys.
+    </p>
+
+    <!--script for toggle theme-->
+    <script>
+      const themeToggleButton = document.getElementById("themeToggle");
+
+      // Устанавливаем тему при загрузке
+      const savedTheme = localStorage.getItem("theme");
+      const initialTheme = savedTheme || "light";
+      document.documentElement.setAttribute("data-theme", initialTheme);
+      updateToggleButton(initialTheme);
+
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute("data-theme");
+        const newTheme = current === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateToggleButton(newTheme);
+      }
+
+      function updateToggleButton(theme) {
+        if (theme === "dark") {
+          themeToggleButton.textContent = "🌙  Toggle Theme";
+        } else {
+          themeToggleButton.textContent = "☀️ Toggle Theme";
+        }
+      }
+    </script>
+  </body>
+</html>
