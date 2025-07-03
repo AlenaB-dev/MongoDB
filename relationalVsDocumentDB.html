@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Relational and Document databases</title>
+    <style>
+      :root {
+        --bg-color-light: #f9f9f9;
+        --text-color-light: #333;
+        --bg-color-dark: #1e1e1e;
+        --text-color-dark: #e0e0e0;
+        --code-bg-light: #eee;
+        --code-bg-dark: #2a2a2a;
+        --accent-color: #007acc;
+      }
+
+      html[data-theme="light"] {
+        --bg-color: var(--bg-color-light);
+        --text-color: var(--text-color-light);
+        --code-bg: var(--code-bg-light);
+      }
+
+      html[data-theme="dark"] {
+        --bg-color: var(--bg-color-dark);
+        --text-color: var(--text-color-dark);
+        --code-bg: var(--code-bg-dark);
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: Arial, sans-serif;
+        margin: 2rem;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .theme-toggle {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: var(--code-bg);
+        color: var(--text-color);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      h1 {
+        padding-top: 50px;
+        padding-bottom: 50px;
+      }
+
+      pre {
+        background-color: var(--code-bg);
+        padding: 1rem;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+      code {
+        background-color: var(--code-bg);
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+      }
+
+      ul {
+        margin-left: 1.5rem;
+      }
+
+      li {
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+      🌙 Toggle Theme
+    </button>
+    <h1>Relational and Document databases</h1>
+    <h4>📊 Relational Databases (RDBMS)</h4>
+    <p>Examples: MySQL, PostgreSQL, SQLite, Oracle, Microsoft SQL Server</p>
+    <ul>
+      🔹 Key Features:
+      <li>Data is stored in tables (rows and columns).</li>
+      <li>Tables are related using foreign keys.</li>
+      <li>Uses SQL (Structured Query Language) for querying.</li>
+      <li>Enforces schemas (structure is predefined and strict).</li>
+      <li>
+        Supports ACID transactions (Atomicity, Consistency, Isolation,
+        Durability).
+      </li>
+    </ul>
+    <ul>
+      ✅ When to Use:
+      <li>
+        When your data is highly structured and has clear relationships (e.g.,
+        users, orders, products).
+      </li>
+      <li>You need strong consistency.</li>
+      <li>You plan to do complex queries, joins, and aggregations.</li>
+    </ul>
+    <h4>🗂️ Document Databases (NoSQL - Document-Oriented)</h4>
+    <p>Examples: MongoDB, CouchDB, Amazon DocumentDB</p>
+    <ul>
+      🔹 Key Features:
+      <li>Data is stored as documents (usually JSON or BSON format)</li>
+      <li>Each document is self-contained (can have different structures).</li>
+      <li>Schema-less or flexible schema.</li>
+      <li>Optimized for read/write performance and scalability.</li>
+      <li>
+        Often used in horizontal scaling (easier to distribute across servers).
+      </li>
+    </ul>
+    <ul>
+      ✅ When to Use:
+      <li>When your data is semi-structured or unstructured.</li>
+      <li>
+        You need to store nested data (e.g., a user profile with addresses,
+        settings, etc.).
+      </li>
+      <li>
+        You're building rapidly changing apps, like real-time analytics, CMSs,
+        or mobile apps.
+      </li>
+      <li>You prefer flexibility over strict structure.</li>
+    </ul>
+    <!--script for toggle theme-->
+    <script>
+      const themeToggleButton = document.getElementById("themeToggle");
+
+      // Устанавливаем тему при загрузке
+      const savedTheme = localStorage.getItem("theme");
+      const initialTheme = savedTheme || "light";
+      document.documentElement.setAttribute("data-theme", initialTheme);
+      updateToggleButton(initialTheme);
+
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute("data-theme");
+        const newTheme = current === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateToggleButton(newTheme);
+      }
+
+      function updateToggleButton(theme) {
+        if (theme === "dark") {
+          themeToggleButton.textContent = "🌙  Toggle Theme";
+        } else {
+          themeToggleButton.textContent = "☀️ Toggle Theme";
+        }
+      }
+    </script>
+  </body>
+</html>
