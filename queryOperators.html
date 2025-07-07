@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Query operators</title>
+    <style>
+      :root {
+        --bg-color-light: #f9f9f9;
+        --text-color-light: #333;
+        --bg-color-dark: #1e1e1e;
+        --text-color-dark: #e0e0e0;
+        --code-bg-light: #eee;
+        --code-bg-dark: #2a2a2a;
+        --accent-color: #007acc;
+      }
+
+      html[data-theme="light"] {
+        --bg-color: var(--bg-color-light);
+        --text-color: var(--text-color-light);
+        --code-bg: var(--code-bg-light);
+      }
+
+      html[data-theme="dark"] {
+        --bg-color: var(--bg-color-dark);
+        --text-color: var(--text-color-dark);
+        --code-bg: var(--code-bg-dark);
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: Arial, sans-serif;
+        margin: 2rem;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .theme-toggle {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: var(--code-bg);
+        color: var(--text-color);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      h1 {
+        padding-top: 50px;
+        padding-bottom: 50px;
+      }
+
+      h2 {
+        margin-top: 40px;
+        color: #678cb1;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        margin-bottom: 30px;
+        background: #7f7e7e;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 8px 12px;
+        text-align: left;
+      }
+      th {
+        background-color: #7f7e7e;
+      }
+
+      pre {
+        background-color: var(--code-bg);
+        padding: 1rem;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+      code {
+        background-color: var(--code-bg);
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+      🌙 Toggle Theme
+    </button>
+    <h1>Query operators</h1>
+    <p>
+      MongoDB has a rich set of query operators which can use inside
+      <code>find()</code> or <code>findOne()</code> to filter documents based on
+      conditions.
+    </p>
+
+    <h2>1. Comparison Operators</h2>
+    <table>
+      <tr>
+        <th>Operator</th>
+        <th>Description</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td><code>$eq</code></td>
+        <td>Equal</td>
+        <td><code>{ age: { $eq: 25 } }</code></td>
+      </tr>
+      <tr>
+        <td><code>$ne</code></td>
+        <td>Not equal</td>
+        <td><code>{ age: { $ne: 30 } }</code></td>
+      </tr>
+      <tr>
+        <td><code>$gt</code></td>
+        <td>Greater than</td>
+        <td><code>{ age: { $gt: 18 } }</code></td>
+      </tr>
+      <tr>
+        <td><code>$gte</code></td>
+        <td>Greater than or equal</td>
+        <td><code>{ age: { $gte: 18 } }</code></td>
+      </tr>
+      <tr>
+        <td><code>$lt</code></td>
+        <td>Less than</td>
+        <td><code>{ age: { $lt: 60 } }</code></td>
+      </tr>
+      <tr>
+        <td><code>$lte</code></td>
+        <td>Less than or equal</td>
+        <td><code>{ age: { $lte: 30 } }</code></td>
+      </tr>
+      <tr>
+        <td><code>$in</code></td>
+        <td>Matches any in array</td>
+        <td><code>{ city: { $in: ["London", "Paris"] } }</code></td>
+      </tr>
+      <tr>
+        <td><code>$nin</code></td>
+        <td>Not in array</td>
+        <td><code>{ status: { $nin: ["inactive"] } }</code></td>
+      </tr>
+    </table>
+
+    <h2>2. Logical Operators</h2>
+    <table>
+      <tr>
+        <th>Operator</th>
+        <th>Description</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td><code>$and</code></td>
+        <td>All conditions must be true</td>
+        <td>
+          <code>{ $and: [ { age: { $gt: 20 } }, { city: "London" } ] }</code>
+        </td>
+      </tr>
+      <tr>
+        <td><code>$or</code></td>
+        <td>At least one must be true</td>
+        <td>
+          <code>{ $or: [ { age: { $lt: 18 } }, { isStudent: true } ] }</code>
+        </td>
+      </tr>
+      <tr>
+        <td><code>$not</code></td>
+        <td>Negates a condition</td>
+        <td><code>{ age: { $not: { $gt: 30 } } }</code></td>
+      </tr>
+      <tr>
+        <td><code>$nor</code></td>
+        <td>None must be true</td>
+        <td>
+          <code>{ $nor: [ { age: { $lt: 18 } }, { isStudent: true } ] }</code>
+        </td>
+      </tr>
+    </table>
+
+    <h2>3. Element Operators</h2>
+    <table>
+      <tr>
+        <th>Operator</th>
+        <th>Description</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td><code>$exists</code></td>
+        <td>Check if field exists</td>
+        <td><code>{ nickname: { $exists: true } }</code></td>
+      </tr>
+      <tr>
+        <td><code>$type</code></td>
+        <td>Check field type</td>
+        <td><code>{ age: { $type: "number" } }</code></td>
+      </tr>
+    </table>
+
+    <h2>4. Evaluation Operators</h2>
+    <table>
+      <tr>
+        <th>Operator</th>
+        <th>Description</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td><code>$regex</code></td>
+        <td>Matches a pattern</td>
+        <td><code>{ name: { $regex: /^A/ } }</code></td>
+      </tr>
+      <tr>
+        <td><code>$expr</code></td>
+        <td>Compare fields or do math</td>
+        <td><code>{ $expr: { $gt: ["$age", "$score"] } }</code></td>
+      </tr>
+      <tr>
+        <td><code>$mod</code></td>
+        <td>Modulus (remainder)</td>
+        <td><code>{ score: { $mod: [5, 0] } }</code></td>
+      </tr>
+    </table>
+
+    <h2>5. Array Operators</h2>
+    <table>
+      <tr>
+        <th>Operator</th>
+        <th>Description</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td><code>$all</code></td>
+        <td>All values must be present</td>
+        <td><code>{ tags: { $all: ["js", "web"] } }</code></td>
+      </tr>
+      <tr>
+        <td><code>$elemMatch</code></td>
+        <td>Match array elements by condition</td>
+        <td><code>{ scores: { $elemMatch: { $gt: 90, $lt: 100 } } }</code></td>
+      </tr>
+      <tr>
+        <td><code>$size</code></td>
+        <td>Match exact array length</td>
+        <td><code>{ tags: { $size: 3 } }</code></td>
+      </tr>
+    </table>
+
+    <p>✅ Example Query Using Several Operators</p>
+    <pre><code>db.users.find({
+  $and: [
+    { age: { $gte: 18 } },
+    { age: { $lt: 30 } },
+    { tags: { $in: ["JavaScript"] } }
+  ]
+});
+</code></pre>
+    <p>
+      This finds users aged 18–29 who have "JavaScript" in their
+      <code>tags</code>.
+    </p>
+
+    <!--script for toggle theme-->
+    <script>
+      const themeToggleButton = document.getElementById("themeToggle");
+
+      // Устанавливаем тему при загрузке
+      const savedTheme = localStorage.getItem("theme");
+      const initialTheme = savedTheme || "light";
+      document.documentElement.setAttribute("data-theme", initialTheme);
+      updateToggleButton(initialTheme);
+
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute("data-theme");
+        const newTheme = current === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateToggleButton(newTheme);
+      }
+
+      function updateToggleButton(theme) {
+        if (theme === "dark") {
+          themeToggleButton.textContent = "🌙  Toggle Theme";
+        } else {
+          themeToggleButton.textContent = "☀️ Toggle Theme";
+        }
+      }
+    </script>
+  </body>
+</html>
