@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update methods</title>
+    <style>
+      :root {
+        --bg-color-light: #f9f9f9;
+        --text-color-light: #333;
+        --bg-color-dark: #1e1e1e;
+        --text-color-dark: #e0e0e0;
+        --code-bg-light: #eee;
+        --code-bg-dark: #2a2a2a;
+        --accent-color: #007acc;
+      }
+
+      html[data-theme="light"] {
+        --bg-color: var(--bg-color-light);
+        --text-color: var(--text-color-light);
+        --code-bg: var(--code-bg-light);
+      }
+
+      html[data-theme="dark"] {
+        --bg-color: var(--bg-color-dark);
+        --text-color: var(--text-color-dark);
+        --code-bg: var(--code-bg-dark);
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: Arial, sans-serif;
+        margin: 2rem;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .theme-toggle {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: var(--code-bg);
+        color: var(--text-color);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      h1 {
+        padding-top: 50px;
+        padding-bottom: 50px;
+      }
+
+      h2 {
+        margin-top: 40px;
+        color: #678cb1;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        margin-bottom: 30px;
+        background: #7f7e7e;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 8px 12px;
+        text-align: left;
+      }
+      th {
+        background-color: #7f7e7e;
+      }
+
+      pre {
+        background-color: var(--code-bg);
+        padding: 1rem;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+      code {
+        background-color: var(--code-bg);
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+      🌙 Toggle Theme
+    </button>
+    <h1>Update operators <code>updateOne() updateMany()</code></h1>
+    <p>
+      These methods let you change existing documents by matching a filter and
+      applying update operations like <code>$set</code>, <code>$inc</code>, etc.
+    </p>
+    <h2>🔧 1. <code>updateOne()</code></h2>
+    <p>Updates the first document that matches the filter.</p>
+    <p>📘 Syntax:</p>
+    <pre><code>db.collection.updateOne(filter, update, options)
+</code></pre>
+    <p>🔹 Example:</p>
+    <pre><code>db.users.updateOne(
+  { name: "Alena" },
+  { $set: { age: 31 } }
+)
+</code></pre>
+    <p>🔸 This will find the first user named Alena and set age to 31.</p>
+
+    <h2>🔧 2. <code>updateMany()</code></h2>
+    <p>Updates all documents that match the filter.</p>
+    <p>📘 Syntax:</p>
+    <pre><code>db.collection.updateMany(filter, update, options)
+</code></pre>
+    <p>🔹 Example:</p>
+    <pre><code>db.users.updateMany(
+  { isStudent: true },
+  { $inc: { age: 1 } }
+)
+</code></pre>
+    <p>🔸 This will increase age by 1 for all users where isStudent is true.</p>
+
+    <p>✅ Example: Update and Add Field</p>
+    <pre><code>db.posts.updateOne(
+  { postId: 3511 },
+  {
+    $set: { status: "published" },
+    $inc: { comments: 1 }
+  }
+)
+</code></pre>
+    <p>
+      This will: <br />
+      - Add or update the status field. <br />
+      - Increment the comments count by 1
+    </p>
+
+    <p>🔍 Want to see what was updated?</p>
+    <p>
+      Use <code>updateOne()</code> with option
+      <code>{ returnDocument: "after" } </code> in a
+      <code>findOneAndUpdate()</code>
+      operation instead:
+    </p>
+    <pre><code>db.users.findOneAndUpdate(
+  { name: "Alena" },
+  { $set: { age: 32 } },
+  { returnDocument: "after" }
+)
+</code></pre>
+
+    <h2>⚙️ Common MongoDB Update Operators</h2>
+
+    <table>
+      <tr>
+        <th>Operator</th>
+        <th>Description</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td><code>$set</code></td>
+        <td>Set the value of a field</td>
+        <td><code>{ $set: { age: 30 } }</code></td>
+      </tr>
+      <tr>
+        <td><code>$unset</code></td>
+        <td>Remove a field</td>
+        <td><code>{ $unset: { nickname: "" } }</code></td>
+      </tr>
+      <tr>
+        <td><code>$inc</code></td>
+        <td>Increment a number</td>
+        <td><code>{ $inc: { age: 1 } }</code></td>
+      </tr>
+      <tr>
+        <td><code>$mul</code></td>
+        <td>Multiply a field</td>
+        <td><code>{ $mul: { score: 2 } }</code></td>
+      </tr>
+      <tr>
+        <td><code>$rename</code></td>
+        <td>Rename a field</td>
+        <td><code>{ $rename: { "old": "new" } }</code></td>
+      </tr>
+    </table>
+
+    <!--script for toggle theme-->
+    <script>
+      const themeToggleButton = document.getElementById("themeToggle");
+
+      // Устанавливаем тему при загрузке
+      const savedTheme = localStorage.getItem("theme");
+      const initialTheme = savedTheme || "light";
+      document.documentElement.setAttribute("data-theme", initialTheme);
+      updateToggleButton(initialTheme);
+
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute("data-theme");
+        const newTheme = current === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateToggleButton(newTheme);
+      }
+
+      function updateToggleButton(theme) {
+        if (theme === "dark") {
+          themeToggleButton.textContent = "🌙  Toggle Theme";
+        } else {
+          themeToggleButton.textContent = "☀️ Toggle Theme";
+        }
+      }
+    </script>
+  </body>
+</html>
