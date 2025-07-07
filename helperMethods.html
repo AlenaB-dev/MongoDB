@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Helper methods</title>
+    <style>
+      :root {
+        --bg-color-light: #f9f9f9;
+        --text-color-light: #333;
+        --bg-color-dark: #1e1e1e;
+        --text-color-dark: #e0e0e0;
+        --code-bg-light: #eee;
+        --code-bg-dark: #2a2a2a;
+        --accent-color: #007acc;
+      }
+
+      html[data-theme="light"] {
+        --bg-color: var(--bg-color-light);
+        --text-color: var(--text-color-light);
+        --code-bg: var(--code-bg-light);
+      }
+
+      html[data-theme="dark"] {
+        --bg-color: var(--bg-color-dark);
+        --text-color: var(--text-color-dark);
+        --code-bg: var(--code-bg-dark);
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: Arial, sans-serif;
+        margin: 2rem;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .theme-toggle {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: var(--code-bg);
+        color: var(--text-color);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      h1 {
+        padding-top: 50px;
+        padding-bottom: 50px;
+      }
+
+      pre {
+        background-color: var(--code-bg);
+        padding: 1rem;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+      code {
+        background-color: var(--code-bg);
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+      }
+
+      ul {
+        margin-left: 1.5rem;
+      }
+
+      li {
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+      🌙 Toggle Theme
+    </button>
+    <h1>Helper methods in MongoDB</h1>
+    <p>
+      There are three very useful helper methods in MongoDB queries: 👉
+      <code>sort()</code>, <code>limit()</code>, and <code>skip()</code> — often
+      used together for pagination and result control.
+    </p>
+    <h2>🔢 1. <code>sort()</code></h2>
+    <p>Sorts the results by one or more fields.</p>
+    <p>📘 Syntax:</p>
+    <pre><code>db.collection.find().sort({ field: 1 })   // Ascending
+db.collection.find().sort({ field: -1 })  // Descending
+</code></pre>
+    <p>🔹 Examples:</p>
+    <pre><code>db.users.find().sort({ age: 1 })       // Sort by age ascending (youngest first)
+db.users.find().sort({ name: -1 })     // Sort by name Z → A
+</code></pre>
+    <p>Sort by multiple fields:</p>
+    <pre><code>db.users.find().sort({ age: 1, name: -1 })
+</code></pre>
+
+    <h2>🔢 2. <code>limit()</code></h2>
+    <p>Limits the number of documents returned.</p>
+    <p>📘 Syntax:</p>
+    <pre><code>db.collection.find().limit(n)
+</code></pre>
+    <p>🔹 Examples:</p>
+    <pre><code>db.users.find().limit(5)   // Show only 5 documents
+</code></pre>
+    <p>
+      This is often used when need to a "preview" or only the first few results.
+    </p>
+
+    <h2>🔢 3. <code>skip()</code></h2>
+    <p>Skips a number of documents in the result set.</p>
+    <p>📘 Syntax:</p>
+    <pre><code>db.collection.find().skip(n)
+</code></pre>
+    <p>🔹 Examples:</p>
+    <pre><code>db.users.find().skip(10)   // Skip first 10 results
+</code></pre>
+    <p>This is useful for pagination (e.g. skip 10, limit 10 → page 2).</p>
+    <h3>🔁 Combining All Three (Pagination Example)</h3>
+    <pre><code>db.users.find()
+  .sort({ age: 1 })
+  .skip(10)
+  .limit(5)
+</code></pre>
+    <ul>
+      🔸 Meaning:
+      <li>Sort by age ascending</li>
+      <li>Skip first 10 results</li>
+      <li>Return next 5 users</li>
+    </ul>
+
+    <h3>⚡️ Bonus: countDocuments()</h3>
+    <p>To know how many total results match a filter:</p>
+    <pre><code>db.users.countDocuments({ age: { $gte: 18 } })
+</code></pre>
+    <p>Useful when building pagination (to know how many pages there are).</p>
+
+    <!--script for toggle theme-->
+    <script>
+      const themeToggleButton = document.getElementById("themeToggle");
+
+      // Устанавливаем тему при загрузке
+      const savedTheme = localStorage.getItem("theme");
+      const initialTheme = savedTheme || "light";
+      document.documentElement.setAttribute("data-theme", initialTheme);
+      updateToggleButton(initialTheme);
+
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute("data-theme");
+        const newTheme = current === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateToggleButton(newTheme);
+      }
+
+      function updateToggleButton(theme) {
+        if (theme === "dark") {
+          themeToggleButton.textContent = "🌙  Toggle Theme";
+        } else {
+          themeToggleButton.textContent = "☀️ Toggle Theme";
+        }
+      }
+    </script>
+  </body>
+</html>
