@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MongoDB Indexes</title>
+    <style>
+      :root {
+        --bg-color-light: #f9f9f9;
+        --text-color-light: #333;
+        --bg-color-dark: #1e1e1e;
+        --text-color-dark: #e0e0e0;
+        --code-bg-light: #eee;
+        --code-bg-dark: #2a2a2a;
+        --accent-color: #007acc;
+      }
+
+      html[data-theme="light"] {
+        --bg-color: var(--bg-color-light);
+        --text-color: var(--text-color-light);
+        --code-bg: var(--code-bg-light);
+      }
+
+      html[data-theme="dark"] {
+        --bg-color: var(--bg-color-dark);
+        --text-color: var(--text-color-dark);
+        --code-bg: var(--code-bg-dark);
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: Arial, sans-serif;
+        margin: 2rem;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .theme-toggle {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: var(--code-bg);
+        color: var(--text-color);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      h1 {
+        padding-top: 50px;
+        padding-bottom: 50px;
+      }
+
+      h2 {
+        margin-top: 40px;
+        color: #678cb1;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        margin-bottom: 30px;
+        background: #7f7e7e;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 8px 12px;
+        text-align: left;
+      }
+      th {
+        background-color: #7f7e7e;
+      }
+
+      pre {
+        background-color: var(--code-bg);
+        padding: 1rem;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+      code {
+        background-color: var(--code-bg);
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+      🌙 Toggle Theme
+    </button>
+    <h1>MongoDB Indexes</h1>
+    <p>
+      🧠 What is an Index? <br />An index in MongoDB is like a table of contents
+      for your collection: It helps the database find documents faster, without
+      scanning every single one.
+    </p>
+
+    <p>
+      📌 Why Use Indexes? <br />Without indexes: MongoDB must scan every
+      document (called a collection scan). <br />With indexes: Queries are much
+      faster, especially on large datasets.
+    </p>
+
+    <h2>🔧 1. Create Index</h2>
+    <p>✅ Basic Index (Ascending)</p>
+    <pre><code>db.users.createIndex({ name: 1 })
+</code></pre>
+    <ul>
+      <li><code>1</code> means ascending order</li>
+      <li>MongoDB can still use this for descending queries too</li>
+    </ul>
+
+    <p>✅ Descending Index</p>
+    <pre><code>db.users.createIndex({ age: -1 })
+</code></pre>
+
+    <h2>🔧 2. Compound Index</h2>
+    <p>An index on multiple fields:</p>
+    <pre><code>db.users.createIndex({ age: 1, name: 1 })
+</code></pre>
+    <p>This is useful when you often filter or sort on both fields.</p>
+
+    <h2>🔎 3. View Indexes</h2>
+    <pre><code>db.users.getIndexes()
+</code></pre>
+
+    <h2>❌ 4. Drop an Index</h2>
+    <pre><code>db.users.dropIndex({ name: 1 })
+</code></pre>
+    <p>Or drop all indexes:</p>
+    <pre><code>db.users.dropIndexes()
+</code></pre>
+
+    <h2>🔥 5. Unique Index</h2>
+    <p>Prevents duplicate values:</p>
+    <pre><code>db.users.createIndex({ email: 1 }, { unique: true })
+</code></pre>
+
+    <h2>⚠️ 6. Indexes ≠ Always Faster</h2>
+    <ul>
+      <li>
+        Indexes speed up reads, but slow down writes (because MongoDB has to
+        update the index too).
+      </li>
+      <li>Use indexes only where needed, based on how you query.</li>
+    </ul>
+
+    <h2>🧪 7. Check if index is used</h2>
+    <p>Use <code>explain()</code>:</p>
+    <pre><code>db.users.find({ name: "Alena" }).explain("executionStats")
+</code></pre>
+    <p>
+      Look for <code>"IXSCAN"</code> instead of <code>"COLLSCAN"</code> in the
+      result.
+    </p>
+
+    <h2>📚 MongoDB Indexes Summary</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Index Type</th>
+          <th>Example</th>
+          <th>Use Case</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Single Field</td>
+          <td><code>{ name: 1 }</code></td>
+          <td>Queries on one field</td>
+        </tr>
+        <tr>
+          <td>Compound</td>
+          <td><code>{ age: 1, name: -1 }</code></td>
+          <td>Queries using multiple fields together</td>
+        </tr>
+        <tr>
+          <td>Unique</td>
+          <td><code>{ email: 1 }, { unique: true }</code></td>
+          <td>Prevent duplicate values (e.g., email)</td>
+        </tr>
+        <tr>
+          <td>Descending</td>
+          <td><code>{ age: -1 }</code></td>
+          <td>Sort queries in descending order</td>
+        </tr>
+        <tr>
+          <td>Text Index</td>
+          <td><code>{ description: "text" }</code></td>
+          <td>For full-text search on string fields</td>
+        </tr>
+        <tr>
+          <td>Hashed Index</td>
+          <td><code>{ _id: "hashed" }</code></td>
+          <td>Sharding and even data distribution</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!--script for toggle theme-->
+    <script>
+      const themeToggleButton = document.getElementById("themeToggle");
+
+      // Устанавливаем тему при загрузке
+      const savedTheme = localStorage.getItem("theme");
+      const initialTheme = savedTheme || "light";
+      document.documentElement.setAttribute("data-theme", initialTheme);
+      updateToggleButton(initialTheme);
+
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute("data-theme");
+        const newTheme = current === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateToggleButton(newTheme);
+      }
+
+      function updateToggleButton(theme) {
+        if (theme === "dark") {
+          themeToggleButton.textContent = "🌙  Toggle Theme";
+        } else {
+          themeToggleButton.textContent = "☀️ Toggle Theme";
+        }
+      }
+    </script>
+  </body>
+</html>
