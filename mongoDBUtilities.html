@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MongoDB Utilities</title>
+    <style>
+      :root {
+        --bg-color-light: #f9f9f9;
+        --text-color-light: #333;
+        --bg-color-dark: #1e1e1e;
+        --text-color-dark: #e0e0e0;
+        --code-bg-light: #eee;
+        --code-bg-dark: #2a2a2a;
+        --accent-color: #007acc;
+      }
+
+      html[data-theme="light"] {
+        --bg-color: var(--bg-color-light);
+        --text-color: var(--text-color-light);
+        --code-bg: var(--code-bg-light);
+      }
+
+      html[data-theme="dark"] {
+        --bg-color: var(--bg-color-dark);
+        --text-color: var(--text-color-dark);
+        --code-bg: var(--code-bg-dark);
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: Arial, sans-serif;
+        margin: 2rem;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .theme-toggle {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: var(--code-bg);
+        color: var(--text-color);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      h1 {
+        padding-top: 50px;
+        padding-bottom: 50px;
+      }
+
+      h2 {
+        margin-top: 40px;
+        color: #678cb1;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        margin-bottom: 30px;
+        background: #7f7e7e;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 8px 12px;
+        text-align: left;
+      }
+      th {
+        background-color: #7f7e7e;
+      }
+
+      pre {
+        background-color: var(--code-bg);
+        padding: 1rem;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+      code {
+        background-color: var(--code-bg);
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+      🌙 Toggle Theme
+    </button>
+    <h1>MongoDB Utilities</h1>
+    <p>
+      In MongoDB, utilities are built-in command-line tools and features that
+      help you manage, back up, restore, and inspect your databases.
+    </p>
+
+    <h2>🧰 MongoDB Utilities Summary</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Utility</th>
+          <th>Purpose</th>
+          <th>Example Command</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>mongosh</code></td>
+          <td>Interactive shell to run queries and scripts</td>
+          <td><code>mongosh</code></td>
+        </tr>
+        <tr>
+          <td><code>mongodump</code></td>
+          <td>Back up a database or collection</td>
+          <td><code>mongodump --db=mydb</code></td>
+        </tr>
+        <tr>
+          <td><code>mongorestore</code></td>
+          <td>Restore data from a <code>mongodump</code> backup</td>
+          <td><code>mongorestore dump/</code></td>
+        </tr>
+        <tr>
+          <td><code>mongoimport</code></td>
+          <td>Import data from JSON, CSV, or TSV files</td>
+          <td>
+            <code
+              >mongoimport --db=mydb --collection=users --file=users.json
+              --jsonArray</code
+            >
+          </td>
+        </tr>
+        <tr>
+          <td><code>mongoexport</code></td>
+          <td>Export data to JSON or CSV</td>
+          <td>
+            <code
+              >mongoexport --db=mydb --collection=users --out=users.json</code
+            >
+          </td>
+        </tr>
+        <tr>
+          <td><code>mongostat</code></td>
+          <td>Real-time performance metrics (inserts, queries, memory)</td>
+          <td><code>mongostat</code></td>
+        </tr>
+        <tr>
+          <td><code>mongotop</code></td>
+          <td>Show read/write activity by collection</td>
+          <td><code>mongotop</code></td>
+        </tr>
+        <tr>
+          <td><code>mongod</code></td>
+          <td>Run the MongoDB server</td>
+          <td><code>mongod --config /path/to/mongod.conf</code></td>
+        </tr>
+        <tr>
+          <td><code>mongos</code></td>
+          <td>Shard router for sharded clusters</td>
+          <td><code>mongos --configdb yourConfigReplicaSet/host:port</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>📝 Details of Most Useful MongoDB Utilities</h2>
+    <p>✅ mongosh</p>
+    <p>
+      The interactive shell for running queries, inserting data, and debugging.
+    </p>
+    <pre><code>mongosh
+</code></pre>
+    <p>✅ mongodump</p>
+    <p>Creates a binary backup of a database.</p>
+    <pre><code>mongodump --db=mydb
+</code></pre>
+    <p>Backups are stored in a dump/ folder by default.</p>
+    <p>✅ mongorestore</p>
+    <p>Restores a database from a mongodump archive.</p>
+    <pre><code>mongorestore dump/
+</code></pre>
+    <p>✅ mongoimport</p>
+    <p>Imports JSON/CSV/TSV files into a collection.</p>
+    <pre><code>mongoimport --db=mydb --collection=users --file=users.json --jsonArray
+</code></pre>
+    <p>✅ mongoexport</p>
+    <p>Exports data to JSON or CSV (great for reports or backups).</p>
+    <pre><code>mongoexport --db=mydb --collection=users --out=users.json
+</code></pre>
+    <p>✅ mongostat</p>
+    <p>
+      Shows real-time performance metrics, like: <br />
+      • Inserts, queries, connections, memory usage
+    </p>
+    <pre><code>mongostat
+</code></pre>
+    <p>✅ mongotop</p>
+    <p>Displays read/write activity by collection.</p>
+    <pre><code>mongotop
+</code></pre>
+
+    <!--script for toggle theme-->
+    <script>
+      const themeToggleButton = document.getElementById("themeToggle");
+
+      // Устанавливаем тему при загрузке
+      const savedTheme = localStorage.getItem("theme");
+      const initialTheme = savedTheme || "light";
+      document.documentElement.setAttribute("data-theme", initialTheme);
+      updateToggleButton(initialTheme);
+
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute("data-theme");
+        const newTheme = current === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateToggleButton(newTheme);
+      }
+
+      function updateToggleButton(theme) {
+        if (theme === "dark") {
+          themeToggleButton.textContent = "🌙  Toggle Theme";
+        } else {
+          themeToggleButton.textContent = "☀️ Toggle Theme";
+        }
+      }
+    </script>
+  </body>
+</html>
