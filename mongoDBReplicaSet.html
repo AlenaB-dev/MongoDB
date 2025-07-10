@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MongoDB Replica Set</title>
+    <style>
+      :root {
+        --bg-color-light: #f9f9f9;
+        --text-color-light: #333;
+        --bg-color-dark: #1e1e1e;
+        --text-color-dark: #e0e0e0;
+        --code-bg-light: #eee;
+        --code-bg-dark: #2a2a2a;
+        --accent-color: #007acc;
+      }
+
+      html[data-theme="light"] {
+        --bg-color: var(--bg-color-light);
+        --text-color: var(--text-color-light);
+        --code-bg: var(--code-bg-light);
+      }
+
+      html[data-theme="dark"] {
+        --bg-color: var(--bg-color-dark);
+        --text-color: var(--text-color-dark);
+        --code-bg: var(--code-bg-dark);
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: Arial, sans-serif;
+        margin: 2rem;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .theme-toggle {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: var(--code-bg);
+        color: var(--text-color);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      h1 {
+        padding-top: 50px;
+        padding-bottom: 50px;
+      }
+
+      pre {
+        background-color: var(--code-bg);
+        padding: 1rem;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+      code {
+        background-color: var(--code-bg);
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+      }
+
+      ul {
+        margin-left: 1.5rem;
+      }
+
+      li {
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+      🌙 Toggle Theme
+    </button>
+    <h1>MongoDB Replica Set</h1>
+    <h2>🔄 What is a Replica Set?</h2>
+    <p>
+      A replica set is a group of MongoDB servers (instances) that maintain the
+      same data set through replication.
+    </p>
+    <ul>
+      ✅ It provides:
+      <li>Automatic failover</li>
+      <li>Redundancy</li>
+      <li>Data availability</li>
+    </ul>
+
+    <h2>📦 Components of a Replica Set</h2>
+    <p>
+      <strong>Primary</strong>: Handles all write operations (only one at a
+      time)
+    </p>
+    <p><strong>Secondary</strong>: Replicates data from the primary</p>
+    <p>
+      <strong>Arbiter</strong>: Participates in elections, but doesn't hold data
+      (used to avoid split votes)
+    </p>
+
+    <h2>⚙️ Basic Replica Set Architecture</h2>
+    <pre><code>[ Primary ] ←→ [ Secondary ]
+       ↓
+   [ Arbiter (optional) ]
+</code></pre>
+
+    <h2>🚀 How to Set Up a Replica Set (Basic Local Example)</h2>
+    <p>1. Start 3 mongod instances in different folders/ports:</p>
+    <pre><code>mongod --replSet "rs0" --port 27017 --dbpath /data/db1
+mongod --replSet "rs0" --port 27018 --dbpath /data/db2
+mongod --replSet "rs0" --port 27019 --dbpath /data/db3
+</code></pre>
+    <p>2. Connect to one with mongosh:</p>
+    <pre><code>mongosh --port 27017
+</code></pre>
+    <p>3. Initiate the replica set:</p>
+    <pre><code>rs.initiate({
+  _id: "rs0",
+  members: [
+    { _id: 0, host: "localhost:27017" },
+    { _id: 1, host: "localhost:27018" },
+    { _id: 2, host: "localhost:27019" }
+  ]
+})
+</code></pre>
+    <p>4. Check status:</p>
+    <pre><code>rs.status()
+</code></pre>
+
+    <h2>✏️ Write Behavior in Replica Set</h2>
+    <ul>
+      <li>Writes always go to the primary</li>
+      <li>Reads can be routed to secondaries with read preferences</li>
+      <li>If the primary goes down, a new one is automatically elected</li>
+    </ul>
+
+    <h2>🔁 Read Preferences (Optional)</h2>
+    <p>Set read preference to use secondaries:</p>
+    <pre><code>db.getMongo().setReadPref("secondary")
+</code></pre>
+
+    <h2>❗ Replica Set Best Practices</h2>
+    <p>
+      ✅ Always use odd number of members (to avoid election ties). <br />✅
+      Don’t use arbiters in production unless absolutely needed. <br />✅ Use
+      authentication and TLS/SSL in real deployments. <br />✅ Ensure time
+      synchronization (NTP) across nodes.
+    </p>
+
+    <!--script for toggle theme-->
+    <script>
+      const themeToggleButton = document.getElementById("themeToggle");
+
+      // Устанавливаем тему при загрузке
+      const savedTheme = localStorage.getItem("theme");
+      const initialTheme = savedTheme || "light";
+      document.documentElement.setAttribute("data-theme", initialTheme);
+      updateToggleButton(initialTheme);
+
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute("data-theme");
+        const newTheme = current === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateToggleButton(newTheme);
+      }
+
+      function updateToggleButton(theme) {
+        if (theme === "dark") {
+          themeToggleButton.textContent = "🌙  Toggle Theme";
+        } else {
+          themeToggleButton.textContent = "☀️ Toggle Theme";
+        }
+      }
+    </script>
+  </body>
+</html>
