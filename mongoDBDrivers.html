@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MongoDB Drivers</title>
+    <style>
+      :root {
+        --bg-color-light: #f9f9f9;
+        --text-color-light: #333;
+        --bg-color-dark: #1e1e1e;
+        --text-color-dark: #e0e0e0;
+        --code-bg-light: #eee;
+        --code-bg-dark: #2a2a2a;
+        --accent-color: #007acc;
+      }
+
+      html[data-theme="light"] {
+        --bg-color: var(--bg-color-light);
+        --text-color: var(--text-color-light);
+        --code-bg: var(--code-bg-light);
+      }
+
+      html[data-theme="dark"] {
+        --bg-color: var(--bg-color-dark);
+        --text-color: var(--text-color-dark);
+        --code-bg: var(--code-bg-dark);
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: Arial, sans-serif;
+        margin: 2rem;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .theme-toggle {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: var(--code-bg);
+        color: var(--text-color);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      h1 {
+        padding-top: 50px;
+        padding-bottom: 50px;
+      }
+
+      h2 {
+        margin-top: 40px;
+        color: #678cb1;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        margin-bottom: 30px;
+        background: #7f7e7e;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 8px 12px;
+        text-align: left;
+      }
+      th {
+        background-color: #7f7e7e;
+      }
+
+      pre {
+        background-color: var(--code-bg);
+        padding: 1rem;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+      code {
+        background-color: var(--code-bg);
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+      🌙 Toggle Theme
+    </button>
+    <h1>MongoDB Drivers</h1>
+    <p>
+      MongoDB Drivers — allow your code (Node.js, Python, etc.) to connect to
+      MongoDB, run queries, and interact with databases programmatically.
+    </p>
+
+    <h2>🚗 What Are MongoDB Drivers?</h2>
+    <p>
+      A driver is a language-specific library that lets your app talk to
+      MongoDB. <br />
+      MongoDB provides official drivers for many popular programming languages.
+    </p>
+    <h2>🚗 MongoDB Official Drivers</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Language</th>
+          <th>Driver Package</th>
+          <th>Install Command</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Node.js</td>
+          <td><code>mongodb</code></td>
+          <td><code>npm install mongodb</code></td>
+        </tr>
+        <tr>
+          <td>Python</td>
+          <td><code>pymongo</code></td>
+          <td><code>pip install pymongo</code></td>
+        </tr>
+        <tr>
+          <td>Java</td>
+          <td><code>mongodb-driver-sync</code></td>
+          <td>Use with Maven or Gradle</td>
+        </tr>
+        <tr>
+          <td>C# / .NET</td>
+          <td><code>MongoDB.Driver</code></td>
+          <td><code>dotnet add package MongoDB.Driver</code></td>
+        </tr>
+        <tr>
+          <td>Go</td>
+          <td><code>mongo-go-driver</code></td>
+          <td><code>go get go.mongodb.org/mongo-driver/mongo</code></td>
+        </tr>
+        <tr>
+          <td>Ruby</td>
+          <td><code>mongo</code></td>
+          <td><code>gem install mongo</code></td>
+        </tr>
+        <tr>
+          <td>PHP</td>
+          <td><code>mongodb</code> extension + <code>mongodb/mongodb</code></td>
+          <td>Install via PECL and Composer</td>
+        </tr>
+        <tr>
+          <td>C++</td>
+          <td><code>mongo-cxx-driver</code></td>
+          <td>Build with CMake</td>
+        </tr>
+        <tr>
+          <td>Swift</td>
+          <td><code>MongoSwift</code></td>
+          <td>Use with Swift Package Manager</td>
+        </tr>
+        <tr>
+          <td>Rust</td>
+          <td><code>mongodb</code> crate</td>
+          <td><code>cargo add mongodb</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="margin-top: 20px">
+      📖 Official Docs:
+      <a href="https://www.mongodb.com/docs/drivers/" target="_blank">
+        mongodb.com/docs/drivers
+      </a>
+    </p>
+
+    <h2>✅ What Drivers Do</h2>
+    <ul>
+      With a driver, you can:
+      <li>
+        Connect to MongoDB via URI: <code>mongodb://localhost:27017</code>
+      </li>
+      <li>
+        Run queries: <code>find</code>, <code>insertOne</code>,
+        <code>updateMany</code>, etc.
+      </li>
+      <li>Handle connection pooling</li>
+      <li>
+        Use features like change streams, transactions, and schema validation
+      </li>
+    </ul>
+
+    <h2>📦 Example: Node.js Driver</h2>
+    <pre><code>import { MongoClient } from "mongodb";
+
+const uri = "mongodb://localhost:27017";
+const client = new MongoClient(uri);
+
+async function run() {
+  await client.connect();
+  const db = client.db("mydb");
+  const users = db.collection("users");
+
+  const result = await users.insertOne({ name: "Alena" });
+  console.log(result);
+
+  await client.close();
+}
+run();
+</code></pre>
+
+    <!--script for toggle theme-->
+    <script>
+      const themeToggleButton = document.getElementById("themeToggle");
+
+      // Устанавливаем тему при загрузке
+      const savedTheme = localStorage.getItem("theme");
+      const initialTheme = savedTheme || "light";
+      document.documentElement.setAttribute("data-theme", initialTheme);
+      updateToggleButton(initialTheme);
+
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute("data-theme");
+        const newTheme = current === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateToggleButton(newTheme);
+      }
+
+      function updateToggleButton(theme) {
+        if (theme === "dark") {
+          themeToggleButton.textContent = "🌙  Toggle Theme";
+        } else {
+          themeToggleButton.textContent = "☀️ Toggle Theme";
+        }
+      }
+    </script>
+  </body>
+</html>
